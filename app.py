@@ -45,3 +45,6 @@ for url in urls:
 
     for itemobj in Items:
         print(json.dumps(itemobj.__dict__) + '\n\n')
+
+
+        

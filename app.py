@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import csv
 
 base_url = 'https://teileshop.diederichs.com'
 
@@ -10,6 +11,9 @@ with open('lists.txt') as f:
 with open('output.csv', 'w+', encoding='utf-8') as g:
                 write = csv.writer(g)
                 write.writerow(["Item id", "Manufacturer", "Vehicle id", "Description", "Image URL"])
+
+with open('Imagedump.txt', 'a') as h:
+    h.write('')
 
 for url1 in urls:
     inputauto_url = url1.split('https://teileshop.diederichs.com', 1)[1]
@@ -52,8 +56,12 @@ for url1 in urls:
     for itemobj in Items:
         print(json.dumps(itemobj.__dict__) + '\n\n')
     
-        with open('output.csv', 'w+', encoding='utf-8') as f:
+        with open('output.csv', 'a', encoding='utf-8') as f:
                 write = csv.writer(f)
                 write.writerow([itemobj.item_id, manu, vehicle_id, itemobj.description, itemobj.image_url])
+        
+        with open('Imagedump.txt', 'a') as g:
+            g.write(json.dumps(itemobj.image_url) + '\n')
+
 
 

@@ -1,19 +1,31 @@
+from pathlib import Path
 from bs4 import BeautifulSoup
 import requests
 import json
 import csv
+import shutil
+import os
 
 base_url = 'https://teileshop.diederichs.com'
 
 with open('lists.txt') as f:
-    urls = f.readlines()
+         if res.status_code == 200:
+            with open(file_name,'wb') as f:
+                shutil.copyfileobj(res.raw, f)
+            print('Image sucessfully Downloaded: ',file_name)
+        else:
+            print('Image Couldn\'t be retrieved')   urls = f.readlines()
 
 with open('output.csv', 'w+', encoding='utf-8') as g:
                 write = csv.writer(g)
                 write.writerow(["Item id", "Manufacturer", "Vehicle id", "Description", "Image URL"])
 
-with open('Imagedump.txt', 'a') as h:
-    h.write('')
+path = 'Images'
+if not os.path.exists(path):
+    os.mkdir(path)
+    print("Directory " , path ,  " Created ")
+else:    
+    print("Directory " , path ,  " already exists")
 
 for url1 in urls:
     inputauto_url = url1.split('https://teileshop.diederichs.com', 1)[1]
@@ -60,8 +72,8 @@ for url1 in urls:
                 write = csv.writer(f)
                 write.writerow([itemobj.item_id, manu, vehicle_id, itemobj.description, itemobj.image_url])
         
-        with open('Imagedump.txt', 'a') as g:
-            g.write(json.dumps(itemobj.image_url) + '\n')
-
-
+        
+        url2 = json.dumps(itemobj.image_url)
+        file_name = url2.split('https://teileshop.diederichs.com/temp/image/popup/')[1]
+        res = requests.get(url, stream = True)
 

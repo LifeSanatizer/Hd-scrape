@@ -1,4 +1,3 @@
-from pathlib import Path
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -9,12 +8,7 @@ import os
 base_url = 'https://teileshop.diederichs.com'
 
 with open('lists.txt') as f:
-         if res.status_code == 200:
-            with open(file_name,'wb') as f:
-                shutil.copyfileobj(res.raw, f)
-            print('Image sucessfully Downloaded: ',file_name)
-        else:
-            print('Image Couldn\'t be retrieved')   urls = f.readlines()
+    urls = f.readlines()
 
 with open('output.csv', 'w+', encoding='utf-8') as g:
                 write = csv.writer(g)
@@ -72,8 +66,12 @@ for url1 in urls:
                 write = csv.writer(f)
                 write.writerow([itemobj.item_id, manu, vehicle_id, itemobj.description, itemobj.image_url])
         
-        
         url2 = json.dumps(itemobj.image_url)
         file_name = url2.split('https://teileshop.diederichs.com/temp/image/popup/')[1]
-        res = requests.get(url, stream = True)
-
+        res = requests.get(url2, stream = True)
+        if res.status_code == 200:
+            with open(file_name,'wb') as f:
+                shutil.copyfileobj(res.raw, f)
+            print('Image sucessfully Downloaded: ',file_name)
+        else:
+            print('Image Couldn\'t be retrieved')

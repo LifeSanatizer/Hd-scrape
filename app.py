@@ -67,11 +67,10 @@ for url1 in urls:
                 write.writerow([itemobj.item_id, manu, vehicle_id, itemobj.description, itemobj.image_url])
         
         url2 = json.dumps(itemobj.image_url)
-        file_name = url2.split('https://teileshop.diederichs.com/temp/image/popup/')[1]
+        url2 = url2.split("\n")[0].split("\"")[1]
         res = requests.get(url2, stream = True)
+        filenameq = os.path.join('.\Images', url1.split('https://teileshop.diederichs.com/temp/image/popup/')[1].split('\"')[0])
         if res.status_code == 200:
-            with open(file_name,'wb') as f:
+            with open(filenameq,'wb') as f:
                 shutil.copyfileobj(res.raw, f)
-            print('Image sucessfully Downloaded: ',file_name)
-        else:
-            print('Image Couldn\'t be retrieved')
+                print('Image sucessfully Downloaded: ',filenameq)

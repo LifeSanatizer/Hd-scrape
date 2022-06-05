@@ -7,9 +7,14 @@ base_url = 'https://teileshop.diederichs.com'
 with open('lists.txt') as f:
     urls = f.readlines()
 
+with open('output.csv', 'w+', encoding='utf-8') as g:
+                write = csv.writer(g)
+                write.writerow(["Item id", "Manufacturer", "Vehicle id", "Description", "Image URL"])
+
 for url1 in urls:
     inputauto_url = url1.split('https://teileshop.diederichs.com', 1)[1]
-
+    manu = url1.split('=', 2)[2].split('&')[0]
+    vehicle_id = url1.split('=')[3].split('&')[0]
     class Item:
         item_id: str
         image_url: str
@@ -31,7 +36,7 @@ for url1 in urls:
         return item
 
 
-    vehicle_url = url
+    vehicle_url = base_url + inputauto_url
     r = requests.get(vehicle_url, headers={'Accept-Language': 'en-US,en;q=0.5'})
     soup = BeautifulSoup(r.content, features="html.parser")
 
@@ -46,3 +51,9 @@ for url1 in urls:
 
     for itemobj in Items:
         print(json.dumps(itemobj.__dict__) + '\n\n')
+    
+        with open('output.csv', 'w+', encoding='utf-8') as f:
+                write = csv.writer(f)
+                write.writerow([itemobj.item_id, manu, vehicle_id, itemobj.description, itemobj.image_url])
+
+
